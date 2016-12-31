@@ -15,6 +15,7 @@ public class MenuHelp {
     private final MenuItem itemAbout = new MenuItem("About");
 
     public MenuHelp() {
+        itemCheckUpdates.setDisable(true);
         menu.getItems().addAll(itemCheckUpdates, itemAbout);
     }
 }
