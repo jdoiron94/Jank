@@ -14,6 +14,9 @@ public class MenuHelp {
     private final MenuItem itemCheckUpdates = new MenuItem("Check for Updates");
     private final MenuItem itemAbout = new MenuItem("About");
 
+    /**
+     * Represents the Help menu.
+     */
     public MenuHelp() {
         itemCheckUpdates.setDisable(true);
         menu.getItems().addAll(itemCheckUpdates, itemAbout);

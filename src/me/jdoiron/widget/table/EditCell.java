@@ -1,4 +1,4 @@
-package me.jdoiron.widget;
+package me.jdoiron.widget.table;
 
 import javafx.event.Event;
 import javafx.scene.control.ContentDisplay;
@@ -18,10 +18,15 @@ public class EditCell<S, T> extends TableCell<S, T> {
     private final TextField textField = new TextField();
 
     // Converter for converting the text in the text field to the user type, and vice-versa:
-    private final StringConverter<T> converter ;
+    private final StringConverter<T> converter;
 
+    /**
+     * Extends TableCell to allow canceled cell commits to co-exist with committed ones.
+     *
+     * @param converter Converts the text in the text field to the user type and vice-versa
+     */
     public EditCell(StringConverter<T> converter) {
-        this.converter = converter ;
+        this.converter = converter;
         itemProperty().addListener((obx, oldItem, newItem) -> {
             if (newItem == null) {
                 setText(null);
@@ -31,10 +36,9 @@ public class EditCell<S, T> extends TableCell<S, T> {
         });
         setGraphic(textField);
         setContentDisplay(ContentDisplay.TEXT_ONLY);
-
         textField.setOnAction(evt -> commitEdit(this.converter.fromString(textField.getText())));
         textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-            if (! isNowFocused) {
+            if (!isNowFocused) {
                 commitEdit(this.converter.fromString(textField.getText()));
             }
         });
@@ -77,7 +81,8 @@ public class EditCell<S, T> extends TableCell<S, T> {
 
     /**
      * Convenience method for creating an EditCell for a String value.
-     * @return
+     *
+     * @return The EditCell for a String value
      */
     public static <S> EditCell<S, String> createStringEditCell() {
         return new EditCell<>(IDENTITY_CONVERTER);
@@ -106,7 +111,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
         // This block is necessary to support commit on losing focus, because the baked-in mechanism
         // sets our editing state to false before we can intercept the loss of focus.
         // The default commitEdit(...) method simply bails if we are not editing...
-        if (! isEditing() && ! item.equals(getItem())) {
+        if (!isEditing() && !item.equals(getItem())) {
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();

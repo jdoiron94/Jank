@@ -1,10 +1,6 @@
 package me.jdoiron.widget;
 
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -14,6 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import me.jdoiron.widget.menu.MenuBar;
+import me.jdoiron.widget.table.EditCell;
+import me.jdoiron.widget.table.Row;
 
 import java.time.LocalDate;
 import java.util.function.Function;
@@ -24,15 +22,30 @@ import java.util.function.Function;
  */
 public class JankFrame extends Application {
 
+    private static final String CENTER_STYLE = "-fx-alignment: CENTER;";
+
     public static void main(String... args) {
         launch(args);
     }
 
-    private <T> TableColumn<T, String> createColumn(String title, Function<T, StringProperty> property) {
-        TableColumn<T, String> col = new TableColumn<>(title);
-        col.setCellValueFactory(cell -> property.apply(cell.getValue()));
-        col.setCellFactory(column -> EditCell.createStringEditCell());
-        return col;
+    /**
+     * Creates a new TableColumn with a specified title, styling, preferred cell width, and associated StringProperty.
+     *
+     * @param title    The title of the column
+     * @param style    The styling of the column
+     * @param width    The preferred cell width of the column
+     * @param property The associated StringProperty
+     * @param <T>      The type of object each row will contain
+     * @return The created TableColumn
+     */
+    private <T> TableColumn<T, String> createColumn(String title, String style, double width,
+                                                    Function<T, StringProperty> property) {
+        TableColumn<T, String> column = new TableColumn<>(title);
+        column.setStyle(style);
+        column.setPrefWidth(width);
+        column.setCellValueFactory(cell -> property.apply(cell.getValue()));
+        column.setCellFactory(col -> EditCell.createStringEditCell());
+        return column;
     }
 
     @Override
@@ -44,14 +57,17 @@ public class JankFrame extends Application {
         TableView<Row> table = new TableView<>();
         table.getSelectionModel().setCellSelectionEnabled(true);
         table.setEditable(true);
-        
-        table.getColumns().add(createColumn("Row", Row::rowProperty));
-        table.getColumns().add(createColumn("Confirm", Row::confirmProperty));
-        table.getColumns().add(createColumn("Date", Row::dateProperty));
-        table.getColumns().add(createColumn("Description", Row::descriptionProperty));
-        table.getColumns().add(createColumn("Credit", Row::creditProperty));
-        table.getColumns().add(createColumn("Debit", Row::debitProperty));
-        table.getColumns().add(createColumn("Balance", Row::balanceProperty));
+
+        TableColumn columnRow = createColumn("Row", CENTER_STYLE, 50, Row::rowProperty);
+        TableColumn columnConfirm = createColumn("Confirm", CENTER_STYLE, 75, Row::confirmProperty);
+        TableColumn columnDate = createColumn("Date", CENTER_STYLE, 150, Row::dateProperty);
+        TableColumn columnDesc = createColumn("Description", CENTER_STYLE, 440, Row::descriptionProperty);
+        TableColumn columnCredit = createColumn("Credit", CENTER_STYLE, 100, Row::creditProperty);
+        TableColumn columnDebit = createColumn("Debit", CENTER_STYLE, 100, Row::debitProperty);
+        TableColumn columnBalance = createColumn("Balance", CENTER_STYLE, 100, Row::balanceProperty);
+
+        table.getColumns().addAll(columnRow, columnConfirm, columnDate, columnDesc, columnCredit, columnDebit,
+                columnBalance);
 
         LocalDate localDate = LocalDate.now();
         System.out.println(localDate);
@@ -59,7 +75,8 @@ public class JankFrame extends Application {
                 localDate.getYear());
 
         table.getItems().addAll(
-                new Row("1", "X", date, "Initial balance", "5.00", "", "5.0")
+                new Row("1", "X", date, "Initial balance", "5.00", "",
+                        "5.00")
         );
 
         table.setOnKeyPressed(event -> {
@@ -74,86 +91,9 @@ public class JankFrame extends Application {
         scrollTable.setFitToWidth(true);
         scrollTable.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        vbox.getChildren().addAll(new MenuBar().bar(), scrollTable);
+        vbox.getChildren().addAll(new MenuBar(table).bar(), scrollTable);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-    }
-
-    public static class Row {
-
-        private final StringProperty row;
-        private final StringProperty confirm;
-        private final StringProperty date;
-        private final StringProperty description;
-        private final StringProperty credit;
-        private final StringProperty debit;
-        private final StringProperty balance;
-
-        public Row(String row, String confirm, String date, String description, String credit, String debit, String balance) {
-            this.row = new SimpleStringProperty(row);
-            this.confirm = new SimpleStringProperty(confirm);
-            this.date = new SimpleStringProperty(date);
-            this.description = new SimpleStringProperty(description);
-            this.credit = new SimpleStringProperty(credit);
-            this.debit = new SimpleStringProperty(debit);
-            this.balance = new SimpleStringProperty(balance);
-        }
-
-        public StringProperty rowProperty() {
-            return row;
-        }
-
-        public String getRow() {
-            return row.get();
-        }
-
-        public StringProperty confirmProperty() {
-            return confirm;
-        }
-
-        public String getConfirm() {
-            return confirm.get();
-        }
-
-        public StringProperty dateProperty() {
-            return date;
-        }
-
-        public String getDate() {
-            return date.get();
-        }
-
-        public StringProperty descriptionProperty() {
-            return description;
-        }
-
-        public String getDescription() {
-            return description.get();
-        }
-
-        public StringProperty creditProperty() {
-            return credit;
-        }
-
-        public String getCredit() {
-            return credit.get();
-        }
-
-        public StringProperty debitProperty() {
-            return debit;
-        }
-
-        public String getDebit() {
-            return debit.get();
-        }
-
-        public StringProperty balanceProperty() {
-            return balance;
-        }
-
-        public String getBalance() {
-            return balance.get();
-        }
     }
 }

@@ -2,15 +2,19 @@ package me.jdoiron.widget.menu;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import me.jdoiron.widget.table.Row;
 
 /**
  * @author Jacob
  * @since 12/30/2016
  */
 public class MenuFile {
+
+    private final TableView<Row> table;
 
     protected final Menu menu = new Menu("File");
     private final Menu menuNew = new Menu("New");
@@ -26,7 +30,13 @@ public class MenuFile {
     private final MenuItem itemSaveAll = new MenuItem("Save All");
     private final MenuItem itemExit = new MenuItem("Exit");
 
-    public MenuFile() {
+    /**
+     * Represents the File menu.
+     *
+     * @param table The TableView representing the table
+     */
+    public MenuFile(TableView<Row> table) {
+        this.table = table;
         itemOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         itemSaveAll.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         itemExit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN));
