@@ -12,6 +12,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
+/**
+ * @author James D
+ * @since 02/12/2015
+ *
+ * @param <S> Object representing each row
+ * @param <T> Type of object stored in each cell
+ */
 public class EditCell<S, T> extends TableCell<S, T> {
 
     // Text field for editing
@@ -82,6 +89,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
     /**
      * Convenience method for creating an EditCell for a String value.
      *
+     * @param <S> Object representing each row
      * @return The EditCell for a String value
      */
     public static <S> EditCell<S, String> createStringEditCell() {

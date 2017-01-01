@@ -68,6 +68,9 @@ public class MenuFile {
         menu.getItems().addAll(menuNew, menuExport, itemOpen, itemClose, itemSettings, itemSaveAs, itemSaveAll, itemExit);
     }
 
+    /**
+     * Opens the specified workbook and loads it into the active window.
+     */
     private void open() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Jank Workbook");
@@ -79,9 +82,6 @@ public class MenuFile {
                  ObjectInputStream ois = new ObjectInputStream(inputStream)) {
                 List<Row> rows = (ArrayList<Row>) ois.readObject();
                 ObservableList<Row> observable = FXCollections.observableList(rows);
-                for (Row r : observable) {
-                    System.out.println(r);
-                }
                 table.setItems(observable);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -89,11 +89,15 @@ public class MenuFile {
         }
     }
 
+    /**
+     * Saves the current workbook to the selected path.
+     */
     private void saveAs() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Save Jank Workbook");
-        chooser.setInitialFileName(".jnk");
+        chooser.setInitialFileName("Workbook");
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Jank Files (*.jnk)", "*.jnk"));
         File path = chooser.showSaveDialog(stage);
         if (path != null) {
             try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
