@@ -1,6 +1,7 @@
 package me.jdoiron.widget.menu;
 
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import me.jdoiron.widget.table.Row;
 
 /**
@@ -16,8 +17,8 @@ public class MenuBar {
      *
      * @param table The TableView representing the table
      */
-    public MenuBar(TableView<Row> table) {
-        MenuFile menuFile = new MenuFile(table);
+    public MenuBar(TableView<Row> table, Stage stage) {
+        MenuFile menuFile = new MenuFile(table, stage);
         MenuEdit menuEdit = new MenuEdit(table);
         MenuHelp menuHelp = new MenuHelp();
         bar.getMenus().addAll(menuFile.menu, menuEdit.menu, menuHelp.menu);

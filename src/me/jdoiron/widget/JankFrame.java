@@ -66,6 +66,8 @@ public class JankFrame extends Application {
         TableColumn columnDebit = createColumn("Debit", CENTER_STYLE, 100, Row::debitProperty);
         TableColumn columnBalance = createColumn("Balance", CENTER_STYLE, 100, Row::balanceProperty);
 
+        columnBalance.setEditable(false);
+
         table.getColumns().addAll(columnRow, columnConfirm, columnDate, columnDesc, columnCredit, columnDebit,
                 columnBalance);
 
@@ -91,7 +93,7 @@ public class JankFrame extends Application {
         scrollTable.setFitToWidth(true);
         scrollTable.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        vbox.getChildren().addAll(new MenuBar(table).bar(), scrollTable);
+        vbox.getChildren().addAll(new MenuBar(table, primaryStage).bar(), scrollTable);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();

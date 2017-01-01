@@ -3,19 +3,25 @@ package me.jdoiron.widget.table;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**
  * @author Jacob
  * @since 12/31/2016
  */
-public class Row {
+public class Row implements Serializable {
 
-    private final StringProperty row;
-    private final StringProperty confirm;
-    private final StringProperty date;
-    private final StringProperty description;
-    private final StringProperty credit;
-    private final StringProperty debit;
-    private final StringProperty balance;
+    private static final long serialVersionUID = 0L;
+
+    private transient StringProperty row;
+    private transient StringProperty confirm;
+    private transient StringProperty date;
+    private transient StringProperty description;
+    private transient StringProperty credit;
+    private transient StringProperty debit;
+    private transient StringProperty balance;
 
     /**
      * Represents a row in a TableView.
@@ -163,5 +169,45 @@ public class Row {
      */
     public String getBalance() {
         return balance.get();
+    }
+
+    /**
+     * Writes the Row object to an ObjectOutputStream.
+     *
+     * @param stream The stream to write
+     * @throws Exception Thrown if there is a problem writing to the stream
+     */
+    private void writeObject(ObjectOutputStream stream) throws Exception {
+        stream.defaultWriteObject();
+        stream.writeObject(getRow());
+        stream.writeObject(getConfirm());
+        stream.writeObject(getDate());
+        stream.writeObject(getDescription());
+        stream.writeObject(getCredit());
+        stream.writeObject(getDebit());
+        stream.writeObject(getBalance());
+    }
+
+    /**
+     * Reads in an ObjectInputStream to create a Row object
+     *
+     * @param stream The stream to read
+     * @throws Exception Thrown if there is a problem reading from the stream
+     */
+    private void readObject(ObjectInputStream stream) throws Exception {
+        stream.defaultReadObject();
+        this.row = new SimpleStringProperty((String) stream.readObject());
+        this.confirm = new SimpleStringProperty((String) stream.readObject());
+        this.date = new SimpleStringProperty((String) stream.readObject());
+        this.description = new SimpleStringProperty((String) stream.readObject());
+        this.credit = new SimpleStringProperty((String) stream.readObject());
+        this.debit = new SimpleStringProperty((String) stream.readObject());
+        this.balance = new SimpleStringProperty((String) stream.readObject());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s, %s, %s, %s, %s, %s, %s", getRow(), getConfirm(), getDate(), getDescription(),
+                getCredit(), getDebit(), getBalance());
     }
 }
