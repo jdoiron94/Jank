@@ -46,6 +46,8 @@ public class MenuFile {
     private final MenuItem itemSaveAll = new MenuItem("Save All");
     private final MenuItem itemExit = new MenuItem("Exit");
 
+    private File openFile;
+
     /**
      * Represents the File menu.
      *
@@ -64,6 +66,7 @@ public class MenuFile {
         itemOpen.setOnAction(e -> open());
         itemSettings.setDisable(true);
         itemSaveAs.setOnAction(e -> saveAs());
+        itemSaveAll.setOnAction(e -> save(openFile));
         itemExit.setOnAction(e -> System.exit(0));
         menu.getItems().addAll(menuNew, menuExport, itemOpen, itemClose, itemSettings, itemSaveAs, itemSaveAll, itemExit);
     }
@@ -83,6 +86,8 @@ public class MenuFile {
                 List<Row> rows = (ArrayList<Row>) ois.readObject();
                 ObservableList<Row> observable = FXCollections.observableList(rows);
                 table.setItems(observable);
+                openFile = path;
+                stage.setTitle(String.format("%s - Jank", removeExtension(openFile.getAbsolutePath())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,13 +105,49 @@ public class MenuFile {
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Jank Files (*.jnk)", "*.jnk"));
         File path = chooser.showSaveDialog(stage);
         if (path != null) {
+            save(path);
+        }
+    }
+
+    /**
+     * Saves the currently open file.
+     *
+     * @param path The file path being updated
+     */
+    private void save(File path) {
+        if (path != null) {
             try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
                  ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
                 ObservableList<Row> rows = table.getItems();
                 oos.writeObject(new ArrayList<>(rows));
+                openFile = path;
+                stage.setTitle(String.format("%s - Jank", removeExtension(openFile.getAbsolutePath())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            saveAs();
         }
+    }
+
+    /**
+     * Returns just the file name from the given path.
+     *
+     * @param path The path to the file
+     * @return The file name, stripped of its path and extension
+     */
+    private String removeExtension(String path) {
+        String filename;
+        int lastSeparatorIndex = path.lastIndexOf(File.separator);
+        if (lastSeparatorIndex == -1) {
+            filename = path;
+        } else {
+            filename = path.substring(lastSeparatorIndex + 1);
+        }
+        int extensionIndex = filename.lastIndexOf(".");
+        if (extensionIndex == -1) {
+            return filename;
+        }
+        return filename.substring(0, extensionIndex);
     }
 }

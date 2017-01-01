@@ -50,7 +50,7 @@ public class JankFrame extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Jank");
+        primaryStage.setTitle("Workbook - Jank");
         VBox vbox = new VBox();
         Scene scene = new Scene(vbox, 1024, 768);
 
