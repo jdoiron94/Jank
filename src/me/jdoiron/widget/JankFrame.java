@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import me.jdoiron.widget.menu.MenuBar;
 import me.jdoiron.widget.table.EditCell;
 import me.jdoiron.widget.table.Row;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.function.Function;
@@ -66,6 +67,7 @@ public class JankFrame extends Application {
         TableColumn columnDebit = createColumn("Debit", CENTER_STYLE, 100, Row::debitProperty);
         TableColumn columnBalance = createColumn("Balance", CENTER_STYLE, 100, Row::balanceProperty);
 
+        columnRow.setEditable(false);
         columnBalance.setEditable(false);
 
         table.getColumns().addAll(columnRow, columnConfirm, columnDate, columnDesc, columnCredit, columnDebit,
@@ -82,8 +84,11 @@ public class JankFrame extends Application {
         );
 
         table.setOnKeyPressed(event -> {
+            String text = event.getText();
+            System.out.println(event);
             TablePosition<Row, String> pos = table.getFocusModel().getFocusedCell();
-            if (pos != null) {
+            if (pos != null && StringUtils.isNotEmpty(text) &&
+                    (StringUtils.isAlphanumericSpace(text) || StringUtils.isAsciiPrintable(text))) {
                 table.edit(pos.getRow(), pos.getTableColumn());
             }
         });
