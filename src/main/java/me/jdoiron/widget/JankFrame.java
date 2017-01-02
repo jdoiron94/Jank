@@ -74,7 +74,6 @@ public class JankFrame extends Application {
                 columnBalance);
 
         LocalDate localDate = LocalDate.now();
-        System.out.println(localDate);
         String date = String.format("%02d/%02d/%04d", localDate.getMonthValue(), localDate.getDayOfMonth(),
                 localDate.getYear());
 
@@ -85,10 +84,10 @@ public class JankFrame extends Application {
 
         table.setOnKeyPressed(event -> {
             String text = event.getText();
-            System.out.println(event);
             TablePosition<Row, String> pos = table.getFocusModel().getFocusedCell();
             if (pos != null && StringUtils.isNotEmpty(text) &&
                     (StringUtils.isAlphanumericSpace(text) || StringUtils.isAsciiPrintable(text))) {
+                System.out.println(event);
                 table.edit(pos.getRow(), pos.getTableColumn());
             }
         });
