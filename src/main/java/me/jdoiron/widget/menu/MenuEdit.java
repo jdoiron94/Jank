@@ -52,7 +52,16 @@ public class MenuEdit {
         itemCopy.setOnAction(e -> copyText(false));
         itemPaste.setOnAction(e -> pasteText());
         itemDelete.setOnAction(e -> deleteText(null, null));
-        menuInsertRow.setDisable(true);
+        itemAbove.setOnAction(e -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            table.getItems().add(index, new Row(Integer.toString(index + 1), "", "", "", "", "", ""));
+            setRowNumbers(index);
+        });
+        itemBelow.setOnAction(e -> {
+            int index = table.getSelectionModel().getSelectedIndex();
+            table.getItems().add(index + 1, new Row(Integer.toString(index + 2), "", "", "", "", "", ""));
+            setRowNumbers(index + 2);
+        });
         menuInsertRow.getItems().addAll(itemAbove, itemBelow);
         itemDeleteRow.setOnAction(e -> deleteRow());
         menu.getItems().addAll(itemCut, itemCopy, itemPaste, itemDelete, menuInsertRow, itemDeleteRow);
@@ -136,6 +145,18 @@ public class MenuEdit {
             for (String col : columns) {
                 deleteText(row, col);
             }
+        }
+    }
+
+    /**
+     * Updates the row numbers for all rows starting at the specified index.
+     *
+     * @param index The start index
+     */
+    public void setRowNumbers(int index) {
+        for (int i = index; i < table.getItems().size(); i++) {
+            Row current = table.getItems().get(i);
+            current.setRow(Integer.toString(i + 1));
         }
     }
 

@@ -119,6 +119,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
         // sets our editing state to false before we can intercept the loss of focus.
         // The default commitEdit(...) method simply bails if we are not editing...
         if (item != null && !isEditing() && !item.equals(getItem())) {
+            System.out.println("hey");
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();
