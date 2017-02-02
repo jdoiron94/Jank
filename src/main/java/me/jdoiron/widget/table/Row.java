@@ -64,6 +64,15 @@ public class Row implements Serializable {
     }
 
     /**
+     * Sets the row number.
+     *
+     * @param row The row number
+     */
+    public void setRow(String row) {
+        this.row = new SimpleStringProperty(row);
+    }
+
+    /**
      * Returns the confirmation property.
      *
      * @return The confirmation property
@@ -169,6 +178,15 @@ public class Row implements Serializable {
      */
     public String getBalance() {
         return balance.get();
+    }
+
+    /**
+     * Sets the balance amount
+     *
+     * @param balance The balance amount
+     */
+    public void setBalance(String balance) {
+        this.balance = new SimpleStringProperty(balance);
     }
 
     /**

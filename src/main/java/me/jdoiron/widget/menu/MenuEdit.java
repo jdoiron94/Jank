@@ -10,6 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import me.jdoiron.widget.table.Row;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -115,11 +117,22 @@ public class MenuEdit {
      * processed, the table will be preserved. Otherwise, the entire row will be deleted.
      */
     private void deleteRow() {
+        int index = table.getSelectionModel().getSelectedIndex();
         Row row = table.getSelectionModel().getSelectedItem();
         if (table.getItems().size() > 1) {
             table.getItems().remove(row);
+            for (int i = index; i < table.getItems().size(); i++) {
+                Row current = table.getItems().get(i);
+                double credit = StringUtils.isBlank(current.getCredit())
+                        || !NumberUtils.isParsable(current.getCredit()) ? 0.0 : Double.parseDouble(current.getCredit());
+                double debit = StringUtils.isBlank(current.getDebit())
+                        || !NumberUtils.isParsable(current.getDebit()) ? 0.0 : Double.parseDouble(current.getDebit());
+                double prevBalance = Double.parseDouble(table.getItems().get(i - 1).getBalance());
+                current.setRow(Integer.toString(i + 1));
+                current.setBalance(String.format("%.02f", prevBalance + credit - debit));
+            }
         } else {
-            String[] columns = {"Row", "Confirm", "Date", "Description", "Credit", "Debit", "Balance"};
+            String[] columns = {"Confirm", "Date", "Description", "Credit", "Debit", "Balance"};
             for (String col : columns) {
                 deleteText(row, col);
             }

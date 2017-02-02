@@ -13,11 +13,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
 /**
- * @author James D
- * @since 02/12/2015
- *
  * @param <S> Object representing each row
  * @param <T> Type of object stored in each cell
+ * @author James D
+ * @since 02/12/2015
  */
 public class EditCell<S, T> extends TableCell<S, T> {
 
@@ -119,7 +118,7 @@ public class EditCell<S, T> extends TableCell<S, T> {
         // This block is necessary to support commit on losing focus, because the baked-in mechanism
         // sets our editing state to false before we can intercept the loss of focus.
         // The default commitEdit(...) method simply bails if we are not editing...
-        if (!isEditing() && !item.equals(getItem())) {
+        if (item != null && !isEditing() && !item.equals(getItem())) {
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();

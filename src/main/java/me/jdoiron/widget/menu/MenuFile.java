@@ -59,7 +59,7 @@ public class MenuFile {
         itemOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         itemSaveAll.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
         itemExit.setAccelerator(new KeyCodeCombination(KeyCode.F4, KeyCombination.ALT_DOWN));
-        menuNew.setDisable(true);
+        //menuNew.setDisable(true);
         menuNew.getItems().addAll(itemFile, itemExistingFile);
         menuExport.getItems().addAll(itemExcel, itemCSV);
         itemClose.setDisable(true);

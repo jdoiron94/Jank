@@ -24,7 +24,6 @@ import me.jdoiron.widget.table.Row;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.function.Function;
 
@@ -131,14 +130,25 @@ public class JankFrame extends Application {
             String confirm = boxConfirm.isSelected() ? "X" : "";
             String date = fieldDate.getEditor().getText();
             String description = fieldDesc.getText();
-            String credit = fieldCredit.getText().replace(',', '.');
-            String debit = fieldDebit.getText().replace(',', '.');
-            if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(description) && (NumberUtils.isParsable(credit) || NumberUtils.isParsable(debit))) {
+            String credit = StringUtils.isBlank(fieldCredit.getText()) ? "" : fieldCredit.getText().replace(',', '.');
+            String debit = StringUtils.isBlank(fieldDebit.getText()) ? "" : fieldDebit.getText().replace(',', '.');
+            if (StringUtils.isNotBlank(date) && StringUtils.isNotBlank(description)
+                    && (NumberUtils.isParsable(credit) || NumberUtils.isParsable(debit))) {
+                System.out.println(table.getItems().size());
                 String prevBalance = table.getItems().get(table.getItems().size() - 1).getBalance();
-                double newCredit = StringUtils.isBlank(credit) || !NumberUtils.isParsable(credit) ? 0.0 : Double.parseDouble(credit);
-                double newDebit = StringUtils.isBlank(debit) || !NumberUtils.isParsable(debit) ? 0.0 : Double.parseDouble(debit);
-                String formattedCredit = StringUtils.isBlank(credit) || !NumberUtils.isParsable(credit) ? "" : String.format("%.02f", Double.parseDouble(credit));
-                String formattedDebit = StringUtils.isBlank(debit) || !NumberUtils.isParsable(debit) ? "" : String.format("%.02f", Double.parseDouble(debit));
+                if (prevBalance == null) {
+                    prevBalance = "0.00";
+                    //row = "1";
+                }
+                double newCredit = StringUtils.isBlank(credit)
+                        || !NumberUtils.isParsable(credit) ? 0.0 : Double.parseDouble(credit);
+                double newDebit = StringUtils.isBlank(debit)
+                        || !NumberUtils.isParsable(debit) ? 0.0 : Double.parseDouble(debit);
+                String formattedCredit = StringUtils.isBlank(credit)
+                        || !NumberUtils.isParsable(credit) ? "" : String.format("%.02f", Double.parseDouble(credit));
+                String formattedDebit = StringUtils.isBlank(debit)
+                        || !NumberUtils.isParsable(debit) ? "" : String.format("%.02f", Double.parseDouble(debit));
+                System.out.println(prevBalance);
                 String newBalance = String.format("%.02f", Double.parseDouble(prevBalance) + newCredit - newDebit);
                 table.getItems().add(
                         new Row(row, confirm, date, description, formattedCredit, formattedDebit, newBalance)
