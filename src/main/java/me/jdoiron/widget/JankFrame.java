@@ -93,7 +93,6 @@ public class JankFrame extends Application {
         );
 
         table.setOnKeyPressed(event -> {
-            System.out.println("HEY");
             String text = event.getText();
             TablePosition<Row, String> pos = table.getFocusModel().getFocusedCell();
             if (pos != null && StringUtils.isNotEmpty(text) &&

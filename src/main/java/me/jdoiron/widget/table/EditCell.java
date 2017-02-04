@@ -53,18 +53,6 @@ public class EditCell<S, T> extends TableCell<S, T> {
                 textField.setText(converter.toString(getItem()));
                 cancelEdit();
                 event.consume();
-            } else if (event.getCode() == KeyCode.RIGHT) {
-                getTableView().getSelectionModel().selectRightCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.LEFT) {
-                getTableView().getSelectionModel().selectLeftCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.UP) {
-                getTableView().getSelectionModel().selectAboveCell();
-                event.consume();
-            } else if (event.getCode() == KeyCode.DOWN) {
-                getTableView().getSelectionModel().selectBelowCell();
-                event.consume();
             }
         });
     }
@@ -119,7 +107,6 @@ public class EditCell<S, T> extends TableCell<S, T> {
         // sets our editing state to false before we can intercept the loss of focus.
         // The default commitEdit(...) method simply bails if we are not editing...
         if (item != null && !isEditing() && !item.equals(getItem())) {
-            System.out.println("hey");
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();
